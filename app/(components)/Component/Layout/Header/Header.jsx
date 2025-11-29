@@ -7,7 +7,7 @@ import MaxWidth from "../../MaxWidth/MaxWidth";
 import MyButton from "../../Button/MyButton";
 import MobileHeader from "./MobileHeader";
 
-const Header = ({ header_data, settings, order_now, params_code }) => {
+const Header = ({ header_data, settings, order_now, params_code, hiddens }) => {
   const mobileMenu = useRef();
   const router = useRouter();
   const pathname = usePathname();
@@ -71,45 +71,52 @@ const Header = ({ header_data, settings, order_now, params_code }) => {
   const cleanedNumber = settings?.number?.replace(/\D/g, "");
   return (
     <>
-      <div
-        className={`absolute top-0 transtion1 left-0 right-0 w-full  bg-[#0f1a25]  z-50 ${
-          scrolledFromTop ? " py-[0px]" : "py-[8px] md:pb-[11px]"
-        }`}
-      >
-        <MaxWidth customClass="max-w-[1596px] h-full 3xl:px-[60px] xl:px-[30px] lg:px-[20px] md:px-[10px]">
-          <div className="flex justify-between items-center md:flex-col">
-            <div className="flex gap-[30px] lg:gap-[10px] md:justify-between md:w-full">
-              <p className="text-white text-[13px] md:text-[12px]">
-                {settings?.description}
-              </p>
-              <Link
-                target="_blank"
-                href={`tel:${cleanedNumber}`}
-                className="text-white text-[13px] md:text-[12px]"
-              >
-                {settings?.number}
-              </Link>
-            </div>
+      {hiddens?.header_top === 1 && (
+        <header
+          className={`absolute top-0 transtion1 left-0 right-0 w-full  bg-[#0f1a25]  z-50 ${
+            scrolledFromTop ? " py-[0px]" : "py-[8px] md:pb-[11px]"
+          }`}
+        >
+          <MaxWidth customClass="max-w-[1596px] h-full 3xl:px-[60px] xl:px-[30px] lg:px-[20px] md:px-[10px]">
+            <div className="flex justify-between items-center md:flex-col">
+              <div className="flex gap-[30px] lg:gap-[10px] md:justify-between md:w-full">
+                <p className="text-white text-[13px] md:text-[12px]">
+                  {settings?.description}
+                </p>
+                <Link
+                  target="_blank"
+                  href={`tel:${cleanedNumber}`}
+                  className="text-white text-[13px] md:text-[12px]"
+                >
+                  {settings?.number}
+                </Link>
+              </div>
 
-            <div className="flex gap-[30px] lg:gap-[10px] md:gap-[0px] lg:flex-col lg:items-start md:mt-[10px] md:w-full ">
-              <Link
-                href={`/${params_code}`}
-                className="text-white text-[13px] md:text-[12px]"
-              >
-                {settings?.title}
-              </Link>
-              <p className="text-white text-[14px] xs:text-[12px] sm:text-center">
-                {settings?.adresslang}
-              </p>
+              <div className="flex gap-[30px] lg:gap-[10px] md:gap-[0px] lg:flex-col lg:items-start md:mt-[10px] md:w-full ">
+                <Link
+                  href={`/${params_code}`}
+                  className="text-white text-[13px] md:text-[12px]"
+                >
+                  {settings?.title}
+                </Link>
+                <p className="text-white text-[14px] xs:text-[12px] sm:text-center">
+                  {settings?.adresslang}
+                </p>
+              </div>
             </div>
-          </div>
-        </MaxWidth>
-      </div>
+          </MaxWidth>
+        </header>
+      )}
+
       <header
         className={` transtion1 left-0 right-0 w-full h-[105px] z-[999] lg:py-[15px] ${
           scrolledFromTop
             ? "fixed top-[0px]"
-            : "absolute top-[35px] lg:top-[65px] md:top-[80px] xs:top-[80px] 2xs:top-[90px]"
+            : `absolute ${
+                hiddens?.header_top === 0
+                  ? "top-[0px]"
+                  : "top-[35px] lg:top-[65px] md:top-[80px] xs:top-[80px] 2xs:top-[90px]"
+              }  `
         }`}
       >
         <div

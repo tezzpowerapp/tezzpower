@@ -3,13 +3,13 @@ import Header from "@/app/(components)/Component/Layout/Header/Header";
 import Home from "@/app/(components)/Home/Home";
 import Linear from "@/app/(components)/Component/Linear/Linear";
 import Main from "@/app/(components)/Component/Main/Main";
-import { fetchData } from "@/app/(components)/fetch/fetch";
+import { fetchData, fetchData2 } from "@/app/(components)/fetch/fetch";
 import ScrollToTop from "@/app/(components)/ScrollToTop/ScrollToTop";
 
 const getData = async (params) => {
   const main = await fetchData(params?.code, "one_page");
-
-  return { main };
+  const hiddens = await fetchData2("home_sections");
+  return { main, hiddens };
 };
 
 export async function generateMetadata({ params }) {
@@ -58,7 +58,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function page({ params }) {
-  const { main } = await getData(params);
+  const { main, hiddens } = await getData(params);
   return (
     <>
       <Header
@@ -66,13 +66,18 @@ export default async function page({ params }) {
         header_data={main?.navigation_menu}
         settings={main?.settings}
         order_now={main?.translations?.order_now}
+        hiddens={hiddens}
       />
       <Linear
         customClass="top-0 left-[-120px] w-full h-full z-30"
         img2={true}
       />
       <Main isTrue={true}>
-        <Home main={main} order_now={main?.translations?.order_now} />
+        <Home
+          main={main}
+          order_now={main?.translations?.order_now}
+          hiddens={hiddens}
+        />
         <Footer
           settings={main?.settings}
           params_code={params?.code}

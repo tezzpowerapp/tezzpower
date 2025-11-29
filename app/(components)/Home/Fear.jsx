@@ -2,9 +2,9 @@ import Section from "../Component/Section/Section";
 import MaxWidth from "../Component/MaxWidth/MaxWidth";
 import Image from "next/image";
 
-const Fear = ({ section6 }) => {
+const Fear = ({ section6, hid }) => {
   return (
-    <Section sectionClass="py-[158px]  lg:py-[100px] rounded-[30px] 3xl:px-[70px] 1xl:px-[50px] lg:px-[30px] md:px-[20px]">
+    <Section sectionClass="py-[118px]  lg:py-[100px] rounded-[30px] 3xl:px-[70px] 1xl:px-[50px] lg:px-[30px] md:px-[20px]">
       <MaxWidth customClass="max-w-[1596px] rounded-[30px] overflow-hidden">
         <div
           className="relative h-[634px] xl:h-[500px] sm:h-full rounded-[30px] qorxu_pic md:overflow-hidden group sm:!bg-none"

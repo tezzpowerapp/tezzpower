@@ -11,7 +11,19 @@ export const fetchData = async (code, endpoint) => {
         return null;
     }
 }
-
+export const fetchData2 = async (endpoint) => {
+    try {
+        const res = await fetch(
+            `${process.env.NEXT_PUBLIC_MAIN_URL}/${endpoint}`, {
+                cache: "no-store"
+            }
+        );
+        if (!res.ok) throw new Error(`Fetch failed for endpoint: ${endpoint}`);
+        return await res.json();
+    } catch (error) {
+        return null;
+    }
+}
 
 export const fetchTranslations = async (code) => {
     try {

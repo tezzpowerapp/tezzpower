@@ -3,9 +3,13 @@ import MaxWidth from "../Component/MaxWidth/MaxWidth";
 import Image from "next/image";
 import LinearRounded from "../Component/Linear/LinearRounded";
 
-const SuperFast = ({ section8 }) => {
+const SuperFast = ({ section8, hid }) => {
   return (
-    <Section sectionClass=" relative 3xl:px-[70px]  1xl:px-[50px] lg:px-[30px] md:px-[20px]">
+    <Section
+      sectionClass={`relative 3xl:px-[70px]  1xl:px-[50px] lg:px-[30px] md:px-[20px] ${
+        hid === 1 ? "mt-[100px]" : "mt-[0px]"
+      }`}
+    >
       <MaxWidth customClass="max-w-[1596px] bg-[#1A2627] lg:bg-transparent rounded-[25px] w-full h-full relative z-40 order-1">
         <Image
           width={1000}
