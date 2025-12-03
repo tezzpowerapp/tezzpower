@@ -6,15 +6,16 @@ import Main from "@/app/(components)/Component/Main/Main";
 import { fetchData, fetchData2 } from "@/app/(components)/fetch/fetch";
 import ScrollToTop from "@/app/(components)/ScrollToTop/ScrollToTop";
 
-const getData = async (params) => {
-  const main = await fetchData(params?.code, "one_page");
+const getData = async (code) => {
+  const main = await fetchData(code, "one_page");
   const hiddens = await fetchData2("home_sections");
   return { main, hiddens };
 };
 
 export async function generateMetadata({ params }) {
   try {
-    const { main } = await getData(params);
+    const { code } = await params;
+    const { main } = await getData(code);
 
     const baseUrl = `${process.env.NEXT_PUBLIC_SITE_NAME}`;
     const pictureBaseUrl = process.env.NEXT_PUBLIC_PICTURE;
@@ -33,8 +34,8 @@ export async function generateMetadata({ params }) {
         title: `${main?.settings?.title} - ${main?.settings?.home_page}`,
         description: main?.settings?.description,
         keywords: main?.settings?.keywords,
-        url: `${baseUrl}/${params?.code}`,
-        siteName: `${baseUrl}/${params?.code}`,
+        url: `${baseUrl}/${code}`,
+        siteName: `${baseUrl}/${code}`,
         type: "website",
         image: logoUrl,
         images: [
@@ -58,11 +59,12 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function page({ params }) {
-  const { main, hiddens } = await getData(params);
+  const { code } = await params;
+  const { main, hiddens } = await getData(code);
   return (
     <>
       <Header
-        params_code={params?.code}
+        params_code={code}
         header_data={main?.navigation_menu}
         settings={main?.settings}
         order_now={main?.translations?.order_now}
@@ -80,7 +82,7 @@ export default async function page({ params }) {
         />
         <Footer
           settings={main?.settings}
-          params_code={params?.code}
+          params_code={code}
           header_data={main?.navigation_menu}
           text1={main?.translations?.privacy_policy}
           text2={main?.translations?.terms_and_conditions}

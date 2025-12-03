@@ -12,47 +12,61 @@ const Header = ({ header_data, settings, order_now, params_code, hiddens }) => {
   const router = useRouter();
   const pathname = usePathname();
   const [scrolledFromTop, setScrollTop] = useState(false);
-  const [currentLang, setCurrentLang] = useState("az");
+
+  // 'params_code' server component'ten 'az' veya 'en' olarak gelir.
+  // Varsayılan dil state'ini buna göre belirliyoruz.
+  const currentLang = params_code || "az";
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       window.addEventListener("scroll", scrollHandler);
     }
-
     return function () {
       if (typeof window !== "undefined") {
         window.removeEventListener("scroll", scrollHandler);
       }
     };
   }, []);
+
   function scrollHandler(event) {
     if (typeof window !== "undefined") {
       window.pageYOffset >= 50 ? setScrollTop(true) : setScrollTop(false);
     }
   }
 
-  useEffect(() => {
-    const pathLang = pathname.split("/")[1];
-    const availableLangs = ["az", "en"];
-    if (availableLangs.includes(pathLang)) {
-      setCurrentLang(pathLang);
-      localStorage.setItem("tezz", pathLang);
-    } else {
-      const storedLang = localStorage.getItem("tezz");
-      if (storedLang && availableLangs.includes(storedLang)) {
-        setCurrentLang(storedLang);
-      }
+  // --- DİL DEĞİŞTİRME MANTIĞI ---
+  const handleLangChange = (targetLang) => {
+    if (targetLang === currentLang) return; // Zaten o dildeysek işlem yapma
+
+    // 1. Mevcut URL'i temizle (Varsa dil prefixini kaldır)
+    let cleanPath = pathname;
+
+    // Eğer URL '/en' ile başlıyorsa temizle
+    if (cleanPath.startsWith("/en")) {
+      cleanPath = cleanPath.replace("/en", "");
     }
-  }, [pathname]);
-  const handleLangChange = (newLang) => {
-    if (newLang === currentLang) return;
-    setCurrentLang(newLang);
-    localStorage.setItem("tezz", newLang);
-    const currentPathWithoutLang = pathname.startsWith(`/${currentLang}`)
-      ? pathname.substring(`/${currentLang}`.length)
-      : pathname;
-    router.replace(`/${newLang}${currentPathWithoutLang || "/"}`);
+
+    // Eğer temizlendikten sonra boş kaldıysa '/' yap
+    if (!cleanPath) cleanPath = "/";
+
+    // 2. Yeni URL oluştur
+    if (targetLang === "az") {
+      // AZ ise prefix koyma (Middleware rewrite edecek)
+      router.push(cleanPath);
+    } else {
+      // EN ise prefix ekle.
+      // Eğer cleanPath '/' ise '/en/' olmasın diye kontrol et.
+      const newPath =
+        cleanPath === "/" ? `/${targetLang}` : `/${targetLang}${cleanPath}`;
+      router.push(newPath);
+    }
+
+    // Seçimi kaydet
+    if (typeof window !== "undefined") {
+      localStorage.setItem("tezz", targetLang);
+    }
   };
+  // --------------------------------
 
   const closeMobileMneu = () => {
     const mobile = mobileMenu?.current?.classList;
@@ -69,6 +83,10 @@ const Header = ({ header_data, settings, order_now, params_code, hiddens }) => {
   };
 
   const cleanedNumber = settings?.number?.replace(/\D/g, "");
+
+  // Linkler için Prefix belirle (AZ ise boş, EN ise '/en')
+  const urlPrefix = currentLang === "az" ? "" : `/${currentLang}`;
+
   return (
     <>
       {hiddens?.header_top === 1 && (
@@ -93,8 +111,9 @@ const Header = ({ header_data, settings, order_now, params_code, hiddens }) => {
               </div>
 
               <div className="flex gap-[30px] lg:gap-[10px] md:gap-[0px] lg:flex-col lg:items-start md:mt-[10px] md:w-full ">
+                {/* Title Linki: Prefix + Page Code değil, sadece Ana sayfa mantığı */}
                 <Link
-                  href={`/${params_code}`}
+                  href={currentLang === "az" ? "/" : `/${currentLang}`}
                   className="text-white text-[13px] md:text-[12px]"
                 >
                   {settings?.title}
@@ -130,7 +149,8 @@ const Header = ({ header_data, settings, order_now, params_code, hiddens }) => {
           <MaxWidth customClass="max-w-[1596px] h-full 3xl:px-[60px] xl:px-[30px] lg:px-[20px] md:px-[10px]">
             <nav className="flex items-center justify-between h-full lg:h-max ">
               <div className="logo ">
-                <Link href={`/${currentLang}`}>
+                {/* Logo Linki Düzenlendi */}
+                <Link href={currentLang === "az" ? "/" : `/${currentLang}`}>
                   <Image
                     width={72}
                     height={45}
@@ -147,7 +167,11 @@ const Header = ({ header_data, settings, order_now, params_code, hiddens }) => {
                       key={item?.id}
                       className="text-[#DFDFDF] text-[16px] font-medium w-max"
                     >
-                      <Link className="w-max" href={item?.slug_url}>
+                      {/* Menu Linkleri Düzenlendi: Prefix + Slug */}
+                      <Link
+                        className="w-max"
+                        href={`${urlPrefix}${item?.slug_url}`}
+                      >
                         {item?.name}
                       </Link>
                     </li>
@@ -203,10 +227,12 @@ const Header = ({ header_data, settings, order_now, params_code, hiddens }) => {
         </div>
       </header>
 
+      {/* MobileHeader'a params_code'u da gönderiyoruz ki orada da linkleri düzeltebilsin */}
       <MobileHeader
         mobileMenu={mobileMenu}
         closeMobileMneu={closeMobileMneu}
         headerLinks={header_data}
+        params={currentLang} // params_code'u mobile'a gönderdik
       />
     </>
   );
