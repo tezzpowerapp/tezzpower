@@ -1,16 +1,17 @@
 import Footer from "@/app/(components)/Component/Layout/Footer/Footer";
 import Header from "@/app/(components)/Component/Layout/Header/Header";
 import Main from "@/app/(components)/Component/Main/Main";
-import { fetchData } from "@/app/(components)/fetch/fetch";
+import { fetchData, fetchData2 } from "@/app/(components)/fetch/fetch";
 import Privacy from "@/app/(components)/Privacy/Privacy";
 import ScrollToTop from "@/app/(components)/ScrollToTop/ScrollToTop";
 
 const getData = async (code) => {
   const main = await fetchData(code, "one_page");
   const all = await fetchData(code, "terms_and_conditions");
+  const hiddens = await fetchData2("home_sections");
   const second = all?.terms_and_conditions_api;
 
-  return { main, second };
+  return { main, second, hiddens };
 };
 
 export async function generateMetadata({ params }) {
@@ -61,7 +62,7 @@ export async function generateMetadata({ params }) {
 
 export default async function page({ params }) {
   const { code } = await params;
-  const { main, second } = await getData(code);
+  const { main, second, hiddens } = await getData(code);
   return (
     <>
       <Header
@@ -69,6 +70,7 @@ export default async function page({ params }) {
         header_data={main?.navigation_menu}
         settings={main?.settings}
         order_now={main?.translations?.order_now}
+        hiddens={hiddens}
       />
 
       <Main isTrue={true}>
