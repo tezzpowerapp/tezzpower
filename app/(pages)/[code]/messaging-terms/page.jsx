@@ -5,9 +5,9 @@ import { fetchData } from "@/app/(components)/fetch/fetch";
 import Messaging from "@/app/(components)/Messaging/Messaging";
 import ScrollToTop from "@/app/(components)/ScrollToTop/ScrollToTop";
 
-const getData = async (params) => {
-  const main = await fetchData(params?.code, "one_page");
-  const all = await fetchData(params?.code, "privacy_policy");
+const getData = async (code) => {
+  const main = await fetchData(code, "one_page");
+  const all = await fetchData(code, "privacy_policy");
   const second = all?.privacy_policy_api;
 
   return { main, second };
@@ -15,6 +15,7 @@ const getData = async (params) => {
 
 export async function generateMetadata({ params }) {
   try {
+    const { code } = await params;
     const { main } = await getData(params);
 
     const baseUrl = `${process.env.NEXT_PUBLIC_SITE_NAME}`;
@@ -34,8 +35,8 @@ export async function generateMetadata({ params }) {
         title: `${main?.settings?.title} - ${main?.settings?.home_page}`,
         description: main?.settings?.description,
         keywords: main?.settings?.keywords,
-        url: `${baseUrl}/${params?.code}`,
-        siteName: `${baseUrl}/${params?.code}`,
+        url: `${baseUrl}/${code}`,
+        siteName: `${baseUrl}/${code}`,
         type: "website",
         image: logoUrl,
         images: [
@@ -59,11 +60,12 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function page({ params }) {
-  const { main, second } = await getData(params);
+  const { code } = await params;
+  const { main, second } = await getData(code);
   return (
     <>
       <Header
-        params_code={params?.code}
+        params_code={code}
         header_data={main?.navigation_menu}
         settings={main?.settings}
         order_now={main?.translations?.order_now}
@@ -73,7 +75,7 @@ export default async function page({ params }) {
         <Messaging data={second} />
         <Footer
           settings={main?.settings}
-          params_code={params?.code}
+          params_code={code}
           header_data={main?.navigation_menu}
           text1={main?.translations?.privacy_policy}
           text2={main?.translations?.terms_and_conditions}
