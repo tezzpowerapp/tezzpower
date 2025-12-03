@@ -17,7 +17,7 @@ const getData = async (code) => {
 export async function generateMetadata({ params }) {
   try {
     const { code } = await params;
-    const { main } = await getData(code);
+    const { main, second } = await getData(code);
 
     const baseUrl = `${process.env.NEXT_PUBLIC_SITE_NAME}`;
     const pictureBaseUrl = process.env.NEXT_PUBLIC_PICTURE;
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }) {
     const faviconUrl = `${pictureBaseUrl}/${main?.settings?.favicon}`;
 
     return {
-      title: `${main?.settings?.title} - ${main?.settings?.home_page}`,
+      title: `${main?.settings?.title} - ${second?.[0]?.page_title_privacy_policy}`,
       description: main?.settings?.description,
       keywords: main?.settings?.keywords,
       icons: {
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }) {
         apple: faviconUrl,
       },
       openGraph: {
-        title: `${main?.settings?.title} - ${main?.settings?.home_page}`,
+        title: `${main?.settings?.title} - ${second?.[0]?.page_title_privacy_policy}`,
         description: main?.settings?.description,
         keywords: main?.settings?.keywords,
         url: `${baseUrl}/${code}`,
