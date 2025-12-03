@@ -19,6 +19,11 @@ const Footer = ({
 }) => {
   const cleanedNumber = settings?.number?.replace(/\D/g, "");
 
+  // === URL MANTIĞI ===
+  // Eğer dil 'az' ise prefix boş ("") olsun.
+  // Eğer dil 'en' ise prefix "/en" olsun.
+  const urlPrefix = params_code === "az" ? "" : `/${params_code}`;
+
   return (
     <footer
       id="bizimleelaqe"
@@ -29,7 +34,8 @@ const Footer = ({
           <div className="footer_card2 ">
             <div className="flex justify-between lg:flex-col w-full py-[50px] lg:py-[40px] px-[120px] 1xl:px-[60px] xl:px-[20px] h-full">
               <div className="flex-0 lg:flex lg:items-center lg:justify-between lg:pb-[20px]  ">
-                <Link href={`/${params_code}`}>
+                {/* Logo Linki */}
+                <Link href={params_code === "az" ? "/" : `/${params_code}`}>
                   <Image
                     width={152}
                     height={95}
@@ -50,38 +56,42 @@ const Footer = ({
               </div>
               <div className="flex flex-col gap-[24px] flex-1 pl-[120px] 1xl:pl-[60px] lg:pl-0 lg:mt-[30px]">
                 <ul className="flex gap-[16px] items-center lg:justify-center lg:grid lg:grid-cols-12 mobile_footer_ul">
+                  {/* Dinamik Menü Linkleri */}
                   {header_data?.map((cur, i) => (
                     <li
                       key={i}
                       className="text-[#fff] lg:col-span-4 border-r lg:w-full border-[#243140] text-[16px] xl:text-[14px] pr-[15px]"
                     >
                       <Link
-                        href={`${cur?.slug_url}`}
+                        href={`${urlPrefix}${cur?.slug_url}`}
                         className="lg:w-max lg:flex"
                       >
                         {cur?.name}
                       </Link>
                     </li>
                   ))}
+
+                  {/* === İSTEDİĞİNİZ KISIM (MASAÜSTÜ) === */}
                   <li className="text-[#fff] hidden lg:flex lg:col-span-6 border-r border-[#243140] text-[16px] xl:text-[14px] ">
-                    <Link href={`/${params_code}/privacy-policy`}>{text1}</Link>
+                    <Link href={`${urlPrefix}/privacy-policy`}>{text1}</Link>
                   </li>
                   <li className="text-[#fff] hidden lg:flex lg:col-span-6 text-[16px] xl:text-[14px] ">
-                    <Link href={`/${params_code}/messaging-terms`}>
-                      {text3}
-                    </Link>
+                    <Link href={`${urlPrefix}/messaging-terms`}>{text3}</Link>
                   </li>
+                  {/* ==================================== */}
                 </ul>
+
+                {/* === İSTEDİĞİNİZ KISIM (MOBİL) === */}
                 <ul className="flex lg:hidden gap-[20px]">
                   <li className="text-[#fff]   text-[16px] xl:text-[14px] pr-[15px]">
-                    <Link href={`/${params_code}/privacy-policy`}>{text1}</Link>
+                    <Link href={`${urlPrefix}/privacy-policy`}>{text1}</Link>
                   </li>
                   <li className="text-[#fff] text-[16px] xl:text-[14px] pr-[15px]">
-                    <Link href={`/${params_code}/messaging-terms`}>
-                      {text3}
-                    </Link>
+                    <Link href={`${urlPrefix}/messaging-terms`}>{text3}</Link>
                   </li>
                 </ul>
+                {/* ==================================== */}
+
                 <ul className="mt-[40px] lg:mt-[20px]">
                   <ul className="flex gap-[80px] lg:gap-[20px]   ">
                     <li className="flex flex-col gap-[10px]">
