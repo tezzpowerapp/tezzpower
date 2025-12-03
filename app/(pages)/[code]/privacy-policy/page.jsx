@@ -17,7 +17,7 @@ const getData = async (code) => {
 export async function generateMetadata({ params }) {
   try {
     const { code } = await params;
-    const { main } = await getData(params);
+    const { main } = await getData(code);
 
     const baseUrl = `${process.env.NEXT_PUBLIC_SITE_NAME}`;
     const pictureBaseUrl = process.env.NEXT_PUBLIC_PICTURE;
