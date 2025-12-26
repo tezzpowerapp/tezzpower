@@ -56,7 +56,7 @@ const WhySection = ({ section2 }) => {
                         <Image
                           width={24}
                           height={24}
-                          alt={cur?.title}
+                          alt={cur?.title || "ildirim"}
                           src={"/site/ildirim.svg"}
                           className="lg:max-w-[15px]"
                         />
