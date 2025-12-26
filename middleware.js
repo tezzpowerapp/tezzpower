@@ -15,9 +15,7 @@ export function middleware(request) {
     if (pathname.startsWith("/qr")) {
         return NextResponse.next();
     }
-    // --- DÜZELTME BİTİŞİ ---
-
-    // 1. /az yolunu URL'den temizle (Redirect)
+    
     if (pathname === `/${defaultLocale}` || pathname.startsWith(`/${defaultLocale}/`)) {
         const newPath = pathname.replace(`/${defaultLocale}`, "");
         return NextResponse.redirect(new URL(newPath || "/", request.url));
